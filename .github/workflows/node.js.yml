@@ -147,7 +147,10 @@ jobs:
                   echo "<html><body><pre>" > ./dist/tests.html
                   npm run test:cov |& tee -a ./dist/tests.html
                   echo "</pre></body></html>" >> ./dist/tests.html
+                  mkdir -p ./dist/tests
+                  cp -r ./coverage/lcov-report/* ./dist/tests/
                   echo "* [Tests](../tests.html)" >> docs/dashboard.md
+                  echo "* [Coverage Report](../tests/)" >> docs/dashboard.md
 
                   printf 'Successfully ran tests\n' >> ./dist/_build_log.txt
 
