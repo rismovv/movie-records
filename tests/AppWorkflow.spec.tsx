@@ -88,4 +88,45 @@ describe("App workflow behavior", () => {
 
         expect(container.querySelector('iframe[src*="delete-me-id"]')).toBeNull();
     });
+
+    test("edits a movie and saves updated title", () => {
+        const { container } = render(<App />);
+
+        userEvent.click(
+            screen.getByRole("button", {
+                name: /add new movie/i,
+            }),
+        );
+        userEvent.type(screen.getByLabelText(/youtube id/i), "edit-me-id");
+        userEvent.click(
+            screen.getByRole("button", {
+                name: /save changes/i,
+            }),
+        );
+
+        const trailer = container.querySelector('iframe[src*="edit-me-id"]');
+        expect(trailer).not.toBeNull();
+        const card = trailer?.closest(".bg-light");
+        expect(card).not.toBeNull();
+        if (!card) {
+            throw new Error("Expected movie card for edited movie");
+        }
+
+        const scoped = within(card as HTMLElement);
+        userEvent.click(
+            scoped.getByRole("button", {
+                name: /edit/i,
+            }),
+        );
+
+        const titleInput = scoped.getByLabelText(/title:/i) as HTMLInputElement;
+        userEvent.type(titleInput, "Edited In App");
+        userEvent.click(
+            scoped.getByRole("button", {
+                name: /save/i,
+            }),
+        );
+
+        expect(scoped.getByRole("heading", { name: "Edited In App" })).toBeInTheDocument();
+    });
 });

@@ -48,4 +48,24 @@ describe("RecordControls", () => {
         userEvent.click(screen.getByRole("button", { name: /liked/i }));
         expect(setMovieWatched).toHaveBeenLastCalledWith(true, false);
     });
+
+    test("marks seen movie as unwatched", () => {
+        const setMovieWatched = jest.fn();
+
+        render(
+            <RecordControls
+                watched={{ seen: true, liked: false, when: "today" }}
+                setMovieWatched={setMovieWatched}
+                changeEditing={jest.fn()}
+            />,
+        );
+
+        userEvent.click(
+            screen.getByRole("button", {
+                name: /mark as unwatched/i,
+            }),
+        );
+
+        expect(setMovieWatched).toHaveBeenCalledWith(false, false);
+    });
 });
